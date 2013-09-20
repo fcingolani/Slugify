@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Slugify : URL Slug generator helper for ASP .NET framework" />
+    <meta name="description" content="Slugify : Simple Slug / Clean URL generator helper for Microsoft .NET framework." />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/fcingolani/Slugify">View on GitHub</a>
 
           <h1 id="project_title">Slugify</h1>
-          <h2 id="project_tagline">URL Slug generator helper for ASP .NET framework</h2>
+          <h2 id="project_tagline">Simple Slug / Clean URL generator helper for Microsoft .NET framework.</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/fcingolani/Slugify/zipball/master">Download this project as a .zip file</a>
@@ -31,10 +31,19 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>
-<a name="slugify" class="anchor" href="#slugify"><span class="octicon octicon-link"></span></a>Slugify</h1>
+        <p>With default settings, you will get an <strong>hyphenized</strong>, <strong>lowercase</strong>, <strong>alphanumeric</strong> version of any string you please, with any <a href="http://en.wikipedia.org/wiki/Diacritic">diacritics</a> removed and collapsed whitespace.</p>
 
-<p>Simple <a href="http://en.wikipedia.org/wiki/Slug_%28web_publishing%29#Slug">Slug / Clean URL</a> generator helper for Microsoft .NET framework.</p>
+<p>In example, having:</p>
+
+<blockquote>
+<p>a ambição cerra o coração</p>
+</blockquote>
+
+<p>You'll get:</p>
+
+<blockquote>
+<p>a-ambicao-cerra-o-coracao</p>
+</blockquote>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -61,7 +70,7 @@
 
       <span class="n">String</span> <span class="n">slug</span> <span class="p">=</span> <span class="n">helper</span><span class="p">.</span><span class="n">GenerateSlug</span><span class="p">(</span><span class="n">title</span><span class="p">);</span> <span class="c1">// "ola-ke-ase"</span>
 
-      <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">slug</span><span class="p">);</span> 
+      <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">slug</span><span class="p">);</span>
    <span class="p">}</span>
 <span class="p">}</span>
 
@@ -93,11 +102,11 @@
 
 <p>In fact, last values are so common they're the default ones! So last code could be rewritten as:</p>
 
-<div class="highlight highlight-csharp"><pre><span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Default</span><span class="p">();</span>
+<div class="highlight highlight-csharp"><pre><span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span><span class="p">();</span>
 <span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
 </pre></div>
 
-<p>One more thing: <em>SlugHelper.Config.Default</em> is used when you call the parameterless <em>SlugHelper</em> constructor. Then ...</p>
+<p>One more thing: <em>SlugHelper.Config</em> is used when you call the parameterless <em>SlugHelper</em> constructor. Then ...</p>
 
 <div class="highlight highlight-csharp"><pre><span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">();</span>
 </pre></div>
@@ -110,7 +119,11 @@
 <h4>
 <a name="characterreplacements" class="anchor" href="#characterreplacements"><span class="octicon octicon-link"></span></a>CharacterReplacements</h4>
 
-<p>Type: <em>Dictionary&lt;String, String&gt;</em>. Default: <strong>Empty</strong>.</p>
+<p>Type: <em>Dictionary&lt;String, String&gt;</em>. Default: [" ": "-"].</p>
+
+<p>Will replace the specified keys with their associated value.</p>
+
+<p>By default, will replace spaces with hyphens.</p>
 
 <h4>
 <a name="forcelowercase" class="anchor" href="#forcelowercase"><span class="octicon octicon-link"></span></a>ForceLowerCase</h4>
