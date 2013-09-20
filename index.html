@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Slugify : URL Slug generator helper for ASP .NET framework" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Slugify</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/fcingolani/Slugify">View on GitHub</a>
+
+          <h1 id="project_title">Slugify</h1>
+          <h2 id="project_tagline">URL Slug generator helper for ASP .NET framework</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/fcingolani/Slugify/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/fcingolani/Slugify/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="slugify" class="anchor" href="#slugify"><span class="octicon octicon-link"></span></a>Slugify</h1>
+
+<p>Simple <a href="http://en.wikipedia.org/wiki/Slug_%28web_publishing%29#Slug">Slug / Clean URL</a> generator helper for Microsoft .NET framework.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>You can get the <a href="http://www.nuget.org/packages/Slugify/">Slugify NuGet package</a> by running the following command in the <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console">Package Manager Console</a>:</p>
+
+<pre><code>PM&gt; Install-Package Slugify
+</code></pre>
+
+<h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+
+<p>It's really simple! Just instantiate <em>SlugHelper</em> and call its <em>GenerateSlug</em> with the <strong>string</strong> you want to convert; it'll return the URL Safe version:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="k">using</span> <span class="nn">Slugify</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">MyApp</span>
+<span class="p">{</span>
+   <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span>
+   <span class="p">{</span>
+      <span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">();</span>
+
+      <span class="n">String</span> <span class="n">title</span> <span class="p">=</span> <span class="s">"OLA ke ase!"</span><span class="p">;</span>
+
+      <span class="n">String</span> <span class="n">slug</span> <span class="p">=</span> <span class="n">helper</span><span class="p">.</span><span class="n">GenerateSlug</span><span class="p">(</span><span class="n">title</span><span class="p">);</span> <span class="c1">// "ola-ke-ase"</span>
+
+      <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">slug</span><span class="p">);</span> 
+   <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div>
+
+<h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>You can provide a <em>SlugHelper.Config</em> instance to <em>SlugHelper</em>'s constructor to customize the helper's behavior, like so:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="c1">// Creating a configuration object</span>
+<span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span><span class="p">();</span>
+
+<span class="c1">// Replace spaces with a hyphens</span>
+<span class="n">config</span><span class="p">.</span><span class="n">CharacterReplacements</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="s">"-"</span><span class="p">);</span>
+
+<span class="c1">// We want a lowercase Slug</span>
+<span class="n">config</span><span class="p">.</span><span class="n">ForceLowerCase</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+<span class="c1">// Colapse consecutive whitespace chars into one</span>
+<span class="n">config</span><span class="p">.</span><span class="n">CollapseWhiteSpace</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+<span class="c1">// Remove everything that's not a letter, number, hyphen, dot, or underscore</span>
+<span class="n">config</span><span class="p">.</span><span class="n">DeniedCharactersRegex</span> <span class="p">=</span> <span class="s">@"[^a-zA-Z0-9\-\._]"</span><span class="p">;</span>
+
+<span class="c1">// Create a helper instance with our new configuration</span>
+<span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+</pre></div>
+
+<p>In fact, last values are so common they're the default ones! So last code could be rewritten as:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Default</span><span class="p">();</span>
+<span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+</pre></div>
+
+<p>One more thing: <em>SlugHelper.Config.Default</em> is used when you call the parameterless <em>SlugHelper</em> constructor. Then ...</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">SlugHelper</span> <span class="n">helper</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SlugHelper</span><span class="p">();</span>
+</pre></div>
+
+<p>... is the same as running the code we had in first place.</p>
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<h4>
+<a name="characterreplacements" class="anchor" href="#characterreplacements"><span class="octicon octicon-link"></span></a>CharacterReplacements</h4>
+
+<p>Type: <em>Dictionary&lt;String, String&gt;</em>. Default: <strong>Empty</strong>.</p>
+
+<h4>
+<a name="forcelowercase" class="anchor" href="#forcelowercase"><span class="octicon octicon-link"></span></a>ForceLowerCase</h4>
+
+<p>Type: <em>Boolean</em>. Default: <strong>true</strong>.</p>
+
+<p>Setting it to true will convert output string to be LowerCase. If false, original casing will be preserved.</p>
+
+<h4>
+<a name="collapsewhitespace" class="anchor" href="#collapsewhitespace"><span class="octicon octicon-link"></span></a>CollapseWhiteSpace</h4>
+
+<p>Type: <em>Boolean</em>. Default: <strong>true</strong>.</p>
+
+<p>Setting it to true will replace consecutive whitespace characters by just one space (" ").</p>
+
+<h4>
+<a name="deniedcharactersregex" class="anchor" href="#deniedcharactersregex"><span class="octicon octicon-link"></span></a>DeniedCharactersRegex</h4>
+
+<p>Type: <em>String</em>. Default: <strong>[^a-zA-Z0-9-._]</strong>.</p>
+
+<p>Any character matching this Regular Expression will be deleted from the resulting string.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2013 Federico Cingolani</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Slugify maintained by <a href="https://github.com/fcingolani">fcingolani</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
