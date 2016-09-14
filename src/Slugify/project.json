@@ -1,0 +1,23 @@
+{
+  "version": "2.0.1",
+  "title": "Slugify",
+  "packOptions": {
+    "description": "Simple Slug / Clean URL generator helper for Microsoft .NET framework.",
+    "licenseUrl": "http://opensource.org/licenses/MIT",
+    "tags": [ "URL", "Slug", "Web" ],
+    "projectUrl": "http://fcingolani.github.io/Slugify/"
+  },
+  "buildOptions": {
+    "debugType": "portable"
+  },
+  "frameworks": {
+    "net40": {
+    },
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Globalization.Extensions": "4.0.1"
+      }
+    }
+  }
+}

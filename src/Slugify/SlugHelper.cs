@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Slugify
 {
@@ -17,7 +14,6 @@ namespace Slugify
         public SlugHelper() :
             this(new SlugHelper.Config())
         {
-
         }
 
         public SlugHelper(Config config)
@@ -25,10 +21,10 @@ namespace Slugify
             if (config != null)
                 _config = config;
             else
-                throw new ArgumentNullException("config", "can't be null use default config or empty construct.");
+                throw new ArgumentNullException(nameof(config), "can't be null use default config or empty construct.");
         }
 
-        public String GenerateSlug(String str)
+        public string GenerateSlug(string str)
         {
             if (_config.ForceLowerCase)
                 str = str.ToLower();
@@ -37,20 +33,20 @@ namespace Slugify
             str = ApplyReplacements(str, _config.CharacterReplacements);
             str = RemoveDiacritics(str);
             str = DeleteCharacters(str, _config.DeniedCharactersRegex);
-
+            str = str.Replace("--", "-");
             return str;
         }
 
-        protected String CleanWhiteSpace(String str, Boolean collapse)
+        protected string CleanWhiteSpace(string str, bool collapse)
         {
             return Regex.Replace(str, collapse ? @"\s+" : @"\s", " ");
         }
 
         // Thanks http://stackoverflow.com/a/249126!
-        protected String RemoveDiacritics(String str)
+        protected string RemoveDiacritics(string str)
         {
-            string stFormD = str.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
+            var stFormD = str.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
 
             for (int ich = 0; ich < stFormD.Length; ich++)
             {
@@ -64,9 +60,9 @@ namespace Slugify
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
 
-        protected String ApplyReplacements(String str, Dictionary<string, string> replacements)
+        protected string ApplyReplacements(string str, Dictionary<string, string> replacements)
         {
-            StringBuilder sb = new StringBuilder(str);
+            var sb = new StringBuilder(str);
 
             foreach (KeyValuePair<string, string> replacement in replacements)
                 sb.Replace(replacement.Key, replacement.Value);
@@ -74,17 +70,17 @@ namespace Slugify
             return sb.ToString();
         }
 
-        protected String DeleteCharacters(String str, String regex)
+        protected string DeleteCharacters(string str, string regex)
         {
             return Regex.Replace(str, regex, "");
         }
 
         public class Config
         {
-            public Dictionary<String, String> CharacterReplacements { get; set; }
-            public Boolean ForceLowerCase { get; set; }
-            public Boolean CollapseWhiteSpace { get; set; }
-            public String DeniedCharactersRegex { get; set; }
+            public Dictionary<string, string> CharacterReplacements { get; set; }
+            public bool ForceLowerCase { get; set; }
+            public bool CollapseWhiteSpace { get; set; }
+            public string DeniedCharactersRegex { get; set; }
 
             public Config()
             {

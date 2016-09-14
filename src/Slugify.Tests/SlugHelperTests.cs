@@ -1,134 +1,131 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 namespace Slugify.Tests
 {
-
-    [TestClass]
     public class SlugHelperTest
     {
-
-        [TestMethod]
+        [Fact]
         public void TestEmptyConfig()
         {
             SlugHelper.Config config = new SlugHelper.Config();
-            Assert.IsTrue(config.ForceLowerCase);
-            Assert.IsTrue(config.CollapseWhiteSpace);
-            Assert.AreEqual(1, config.CharacterReplacements.Count);
-            Assert.IsNotNull(new Regex(config.DeniedCharactersRegex));
+            Assert.True(config.ForceLowerCase);
+            Assert.True(config.CollapseWhiteSpace);
+            Assert.Equal(1, config.CharacterReplacements.Count);
+            Assert.NotNull(new Regex(config.DeniedCharactersRegex));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDefaultConfig()
         {
             KeyValuePair<string, string> defaultReplacement = new KeyValuePair<string, string>(" ","-");
             
             SlugHelper.Config config = new SlugHelper.Config();
             
-            Assert.AreEqual(1, config.CharacterReplacements.Count);
-            Assert.AreEqual("-", config.CharacterReplacements[" "]);
+            Assert.Equal(1, config.CharacterReplacements.Count);
+            Assert.Equal("-", config.CharacterReplacements[" "]);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEmptyConstructor()
         {
-            SlugHelper helper = new SlugHelper();
-            Assert.IsNotNull(helper);
+            var helper = new SlugHelper();
+            Assert.NotNull(helper);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(System.ArgumentNullException))]
+        [Fact]
         public void TestConstructorWithNullConfig()
         {
-            SlugHelper helper = new SlugHelper(null);
+            Assert.Throws<ArgumentNullException>(() => new SlugHelper(null));
+            
         }
 
-        [TestMethod]
+        [Fact]
         public void TestLoweCaseEnforcement()
         {
-            String original = "AbCdE";
-            String expected = "abcde";
+            var original = "AbCdE";
+            var expected = "abcde";
 
-            SlugHelper helper = new SlugHelper();
+            var helper = new SlugHelper();
 
-            Assert.AreEqual(expected, helper.GenerateSlug(original));
+            Assert.Equal(expected, helper.GenerateSlug(original));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestWhiteSpaceCollapsing()
         {
-            String original = "a  b    \n  c   \t    d";
-            String expected = "a-b-c-d";
+            var original = "a  b    \n  c   \t    d";
+            var expected = "a-b-c-d";
 
-            SlugHelper helper = new SlugHelper();
+            var helper = new SlugHelper();
 
-            Assert.AreEqual(expected, helper.GenerateSlug(original));
+            Assert.Equal(expected, helper.GenerateSlug(original));
         }
-        
-        [TestMethod]
+
+        [Fact]
         public void TestDiacriticRemoval()
         {
-            String withDiacritics = "ñáîùëÓ";
-            String withoutDiacritics = "naiueo";
+            var withDiacritics = "ñáîùëÓ";
+            var withoutDiacritics = "naiueo";
 
-            SlugHelper helper = new SlugHelper();
+            var helper = new SlugHelper();
 
-            Assert.AreEqual(withoutDiacritics, helper.GenerateSlug(withDiacritics));
+            Assert.Equal(withoutDiacritics, helper.GenerateSlug(withDiacritics));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDeniedCharacterDeletion()
         {
-            String original = "!#$%&/()=";
-            String expected = "";
+            var original = "!#$%&/()=";
+            var expected = "";
 
-            SlugHelper helper = new SlugHelper();
+            var helper = new SlugHelper();
 
-            Assert.AreEqual(expected, helper.GenerateSlug(original));
+            Assert.Equal(expected, helper.GenerateSlug(original));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestCharacterReplacement()
         {
-            String original = "abcde";
-            String expected = "xyzde";
+            var original = "abcde";
+            var expected = "xyzde";
 
-            SlugHelper.Config config = new SlugHelper.Config();
+            var config = new SlugHelper.Config();
             config.CharacterReplacements.Add("a", "x");
             config.CharacterReplacements.Add("b", "y");
             config.CharacterReplacements.Add("c", "z");
 
-            SlugHelper helper = new SlugHelper(config);
+            var helper = new SlugHelper(config);
 
-            Assert.AreEqual(expected, helper.GenerateSlug(original));
+            Assert.Equal(expected, helper.GenerateSlug(original));
         }
 
-        [TestMethod]
-        public void TestFullFunctionality()
+        [Theory]
+        [InlineData("E¢Ðƕtoy  mÚÄ´¨ss¨sïuy   !!!!!  Pingüiño", "etoy-muasssiuy-pinguino")]
+        [InlineData("QWE dfrewf# $%&!! asd", "qwe-dfrewf-asd")]
+        [InlineData("You can't have any pudding if you don't eat your meat!", "you-cant-have-any-pudding-if-you-dont-eat-your-meat")]
+        [InlineData("El veloz murciélago hindú", "el-veloz-murcielago-hindu")]
+        [InlineData("Médicos sin medicinas medican meditando", "medicos-sin-medicinas-medican-meditando")]
+
+        public void TestFullFunctionality(string input, string output)
         {
-            SlugHelper helper = new SlugHelper();
-            Dictionary<string, string> tests = new Dictionary<string, string>();
-            
-            tests.Add(  "E¢Ðƕtoy  mÚÄ´¨ss¨sïuy   !!!!!  Pingüiño",
-                        "etoy-muasssiuy--pinguino");
+            var helper = new SlugHelper();
 
-            tests.Add(  "QWE dfrewf# $%&!! asd",
-                        "qwe-dfrewf--asd");
-            
-            tests.Add(  "You can't have any pudding if you don't eat your meat!",
-                        "you-cant-have-any-pudding-if-you-dont-eat-your-meat");
+            Assert.Equal(output, helper.GenerateSlug(input));
+          
+        }
 
-            tests.Add(  "El veloz murciélago hindú",
-                        "el-veloz-murcielago-hindu");
+        [Fact]
+        public void TestNotReturningMultipleDashes()
+        {
+            var original = "foo & bar";
+            var expected = "foo-bar";
 
-            tests.Add(  "Médicos sin medicinas medican meditando",
-                        "medicos-sin-medicinas-medican-meditando");
+            var helper = new SlugHelper();
 
-            foreach(KeyValuePair<string, string> test in tests){
-                Assert.AreEqual(test.Value, helper.GenerateSlug(test.Key));
-            }
+            Assert.Equal(expected, helper.GenerateSlug(original));
         }
 
     }
